@@ -34,9 +34,10 @@ end
 def game_menu
   puts "~=~=~=~=~= PLAY GAME =~=~=~=~=~ "
   puts "1.) 21"
-  puts "2.) High/Low"
+  puts "2.) Dice Game"
   puts "3.) Roulette"
-  puts "4.) Main menu"
+  puts "4.) Slots"
+  puts "5.) Main menu"
   puts "~=~=~=~ $$ WIN MONEY $$ ~=~=~=~ "
 
   game_choice = gets.strip
@@ -46,8 +47,7 @@ def game_menu
 
   elsif
     game_choice == "2"
-    puts "Coming soon!"
-    game_menu
+    dice_game
 
   elsif
     game_choice == "3"
@@ -55,6 +55,10 @@ def game_menu
 
   elsif
     game_choice == "4"
+    start_slots
+
+  elsif
+    game_choice =="5"
     main_menu
 
   else
@@ -510,7 +514,122 @@ def play_roulette_again
   end
 end
 
-######################## 
+######################## Slots
+
+@slot_items = ["APPLES", "ORANGES"]
+
+def start_slots
+  puts "    
+ Let's play APPLES and ORANGES!
+
+          .-------.
+       .=============.
+       | [a] [a] [o] | __
+       | [$] [$] [$] |(  )
+       | [o] [o] [a] | ||
+       |             | ||
+       | aaa ::::::: |_||
+       | ooo ::::::: |__'
+       | $$$ ::::::: |
+       |             |
+       |      __ === |
+       |_____|__|____|
+      |###############|
+     |#################|
+    |___________________|
+    
+---Feeling lucky? Type 'Y' to pull the lever.---\n        ---Or type 'N' to go back.---\n\n"
+
+lever_option
+end
+
+def lever_option
+lever_pull = gets.strip.upcase
+  if lever_pull == "Y"
+    puts "How much will you bet?"
+    @bet = gets.to_i
+    if @bet > @balance
+      puts "You can't bet more than your balance!"
+      puts "Rerouting you to balance menu..."
+      balance_menu
+    elsif
+      @bet < 0
+      puts "Invalid bet amount"
+      start_slots
+    else
+    @balance -= @bet
+    puts "You bet $#{@bet}"
+    run_slot_1
+    end
+  elsif lever_pull == "N"
+    puts "You can't win what you don't put down!"
+    main_menu
+  else 
+    puts "Invalid response. Please try again."
+    start_slots
+  end
+end
+
+
+def run_slot_1
+  puts "Nice pull! Waiting for slot one... \n"
+    sleep(4)
+  slot1 = @slot_items.sample
+  puts "Slot one returned #{slot1}! \n"
+    sleep(1)
+  puts "Waiting for slot two... \n"
+    sleep(5)
+  # run_slot_2
+  slot2 = @slot_items.sample
+  puts "Slot two returned #{slot2}!"
+  # slot_checker
+    if slot1 == slot2
+      puts "Congratulations! You got a winning combination of #{slot1} and #{slot2}. You win $#{@bet}"
+      @balance += (2 * @bet)
+    else
+      puts "Awe, your slots didn't match this time. Try again to win your money back!"
+    end
+    start_slots
+end
+
+###################### Dice game
+
+def dice_game
+
+  puts 'Let\'s play dice, ya\'ll!'
+    puts "Place your bet! You have #{@balance} chips left!"
+    @bet = gets.chomp
+    while true
+      if (@balance.to_i - @bet.to_i) < 0
+        puts 'You don\'t have that many chips! Try again.'
+        @bet = gets.chomp
+      else
+        break
+      end
+    end
+    if @bet.to_i > 5
+      puts @bet.to_s + '?! You high rollin.'
+      puts 'I\'ll roll two dice. What do you think the total will be?'
+    else
+      puts @bet.to_s + '?! Just that much.'
+      puts 'I\'ll roll two dice. What do you think the total will be?'
+    end
+    total = gets.chomp
+    dice_total = ((1 + rand(6))+(1 + rand(6)))
+    print 'The total was ' + dice_total.to_s + '! '
+    if dice_total.to_i == total.to_i
+      @balance = @balance.to_i + @bet.to_i
+      puts 'You win! Nice job!'
+    else
+      @balance = @balance.to_i - @bet.to_i
+      puts 'Not this time, my friend!'
+    end
+
+  main_menu
+
+  
+  end
+  
 
 main_menu
 
